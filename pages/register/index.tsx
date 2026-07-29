@@ -1,11 +1,14 @@
-import { TokenPayload } from "@/interfaces/jwt";
 import Link from "next/link";
-import { jwtDecode } from "jwt-decode";
+import { useRouter } from "next/router";
+import { toast } from "sonner";
 
 const Index = () => {
-  const login = async (e: React.FormEvent<HTMLFormElement>) => {
+  const router = useRouter();
+
+  const register = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const payload = {
+      name: e.currentTarget.name.value,
       email: e.currentTarget.email.value,
       password: e.currentTarget.password.value,
     };
@@ -17,12 +20,11 @@ const Index = () => {
       body: JSON.stringify(payload),
     });
     const data = await res.json();
-    console.log(data);
-    // if (data.success) {
-    // window.localStorage.setItem("token", data.token);
-    // const token: TokenPayload = jwtDecode<TokenPayload>(data.token);
-    // window.location.href = "/dashboard";
-    // }
+    if (!data.ok) {
+      toast.error(data.message);
+    } else {
+      router.push("/login");
+    }
   };
 
   return (
@@ -37,12 +39,29 @@ const Index = () => {
 
       <div className="h-fit flex items-center">
         <form
-          onSubmit={login}
+          onSubmit={register}
           className="mx-auto w-sm space-y-4 rounded-lg border border-gray-300 bg-gray-100 p-6"
         >
           <h1 className="text-center text-3xl text-indigo-900 font-semibold">
             Register
           </h1>
+
+          <div>
+            <label
+              className="block text-sm font-medium text-gray-900"
+              htmlFor="name"
+            >
+              Name
+            </label>
+
+            <input
+              className="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:outline-none"
+              id="name"
+              name="name"
+              type="text"
+              required
+            />
+          </div>
 
           <div>
             <label

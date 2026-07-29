@@ -1,31 +1,49 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from "next";
+import { verifyToken } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 
-type Response = {
+interface User {
   id: string;
-  url: string;
-  uploadedAt: string;
-};
+  name: string;
+  email: string;
+}
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<Response>,
+  res: NextApiResponse,
 ) {
-  switch (req.method) {
-    case "GET":
-      res.status(200).json({
-        id: "1",
-        url: "https://example.com/image.jpg",
-        uploadedAt: new Date().toISOString(),
+  if (req.method === "DETETE") {
+    const token = req.cookies.token;
+
+    if (!token) {
+      return res.status(401).json({
+        message: "Unauthorized",
       });
-      break;
-    case "DELETE":
-      res
-        .status(200)
-        .json({
-          id: "1",
-          url: "https://example.com/image.jpg",
-          uploadedAt: new Date().toISOString(),
-        });
+    }
+
+    const user = verifyToken(token) as User;
+
+    if (!user) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const result = await prisma.user.delete({
+      where: {
+        id: user.id,
+      },
+    });
+
+    if (!result) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    res.status(200).json({
+      ok: true,
+      message: "File deleted successfully",
+    });
   }
 }

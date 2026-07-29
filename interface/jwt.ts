@@ -3,3 +3,9 @@ export interface TokenPayload {
   email: string;
   exp: number;
 }
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+}

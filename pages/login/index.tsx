@@ -1,10 +1,9 @@
-import { TokenPayload } from "@/interfaces/jwt";
 import Link from "next/link";
-import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { toast } from "sonner";
 
 const Index = () => {
-  const [token, setToken] = useState<string | null>(null);
+  const router = useRouter();
   const login = async (e: any) => {
     e.preventDefault();
     const payload = {
@@ -19,11 +18,11 @@ const Index = () => {
       body: JSON.stringify(payload),
     });
     const data = await res.json();
-    if (data.success) {
-      window.localStorage.setItem("token", data.token);
-      const token: TokenPayload = jwtDecode<TokenPayload>(data.token);
-      setToken(JSON.stringify(token));
-      window.location.href = "/dashboard";
+    if (!data.ok) {
+      toast.error(data.message);
+    } else {
+      localStorage.setItem("token_info", data.token);
+      router.push("/dashboard");
     }
   };
 

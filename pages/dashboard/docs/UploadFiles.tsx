@@ -1,5 +1,3 @@
-import React from "react";
-
 const UploadFiles = () => {
   const reqCode = `fetch("https://masgil.site/masgilbase/files/upload", {
   method: "POST",

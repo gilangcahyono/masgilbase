@@ -1,16 +1,24 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import { User } from "@/interface/jwt";
+import { verifyToken } from "@/lib/auth";
 import type { NextApiRequest, NextApiResponse } from "next";
 
-type Response = {
-  id: string;
-  url: string;
-  uploadedAt: string;
-}[];
+export default function handler(req: NextApiRequest, res: NextApiResponse) {
+  const token = req.cookies.token;
 
-export default function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Response>,
-) {
+  if (!token) {
+    return res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+
+  const user = verifyToken(token) as User;
+
+  if (!user) {
+    return res.status(401).json({
+      message: "Unauthorized",
+    });
+  }
+
   res.status(200).json([
     {
       id: "1",

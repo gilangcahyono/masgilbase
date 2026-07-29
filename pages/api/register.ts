@@ -4,8 +4,9 @@ import { randomBytes } from "node:crypto";
 import bcrypt from "bcrypt";
 
 type RegisterResponse = {
-  success: boolean;
+  ok: boolean;
   data?: {
+    name: string;
     email: string;
     password: string;
     apiKey: string;
@@ -20,21 +21,23 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     const payload = req.body as {
+      name: string;
       email: string;
       password: string;
     };
 
     const apiKey: string = randomBytes(32).toString("base64");
 
-    if (!payload.email || !payload.password) {
+    if (!payload.name || !payload.email || !payload.password) {
       return res.status(400).json({
-        success: false,
-        message: "Required email and password.",
+        ok: false,
+        message: "Required field.",
       });
     }
 
     const newUser = await prisma.user.create({
       data: {
+        name: payload.name,
         email: payload.email,
         password: await bcrypt.hash(payload.password, 12),
         apiKey: apiKey,
@@ -42,9 +45,9 @@ export default async function handler(
     });
 
     return res.status(200).json({
-      success: true,
+      ok: true,
       data: newUser,
-      message: "Pendaftaran berhasil.",
+      message: "User created successfully.",
     });
   }
 }
