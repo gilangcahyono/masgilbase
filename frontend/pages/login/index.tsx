@@ -1,12 +1,13 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
+import { LoginPayload, LoginResponse } from "../api/login";
 
 const Index = () => {
   const router = useRouter();
   const login = async (e: any) => {
     e.preventDefault();
-    const payload = {
+    const payload: LoginPayload = {
       email: e.currentTarget.email.value,
       password: e.currentTarget.password.value,
     };
@@ -17,11 +18,16 @@ const Index = () => {
       },
       body: JSON.stringify(payload),
     });
-    const data = await res.json();
-    if (!data.ok) {
-      toast.error(data.message);
+    const data: LoginResponse = await res.json();
+    if (!data.success) {
+      if (typeof data.message === "string") {
+        toast.error(data.message);
+      } else {
+        const errors = Object.values(data.message);
+        toast.error(errors[0][0]);
+      }
     } else {
-      localStorage.setItem("token_info", data.token);
+      localStorage.setItem("token_info", data.token!);
       router.push("/dashboard");
     }
   };

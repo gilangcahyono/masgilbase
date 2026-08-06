@@ -3,27 +3,48 @@ import bcrypt from "bcrypt";
 import { prisma } from "@/lib/prisma";
 import { createToken } from "@/lib/auth";
 import * as cookie from "cookie";
+import * as z from "zod";
 
-export default async function handler(
+const loginSchema = z.object({
+  email: z.string().email().nonempty({
+    message: "Name is required.",
+  }),
+  password: z
+    .string()
+    .min(8, {
+      message: "Password must be at least 8 characters.",
+    })
+    .nonempty({
+      message: "Password is required.",
+    }),
+});
+
+export type LoginPayload = z.infer<typeof loginSchema>;
+
+export interface LoginResponse {
+  success: boolean;
+  message: string | Record<string, string[]>;
+  token?: string | undefined;
+}
+
+const handler = async (
   req: NextApiRequest,
-  res: NextApiResponse,
-) {
+  res: NextApiResponse<LoginResponse>,
+) => {
   if (req.method === "POST") {
-    const { email, password } = req.body as {
-      email: string;
-      password: string;
-    };
+    const payload = req.body as LoginPayload;
 
-    if (!email || !password) {
+    const result = await loginSchema.safeParseAsync(payload);
+    if (!result.success) {
       return res.status(400).json({
-        ok: false,
-        message: "Email dan password wajib diisi.",
+        success: false,
+        message: result.error.flatten().fieldErrors,
       });
     }
 
     const user = await prisma.user.findUnique({
       where: {
-        email,
+        email: payload.email,
       },
       select: {
         id: true,
@@ -34,16 +55,14 @@ export default async function handler(
     });
 
     if (user) {
-      const passwordMatch = await bcrypt.compare(password, user.password);
+      const passwordMatch = await bcrypt.compare(
+        payload.password,
+        user.password,
+      );
 
       if (passwordMatch) {
-        const secretToken = createToken({
+        const token = createToken({
           id: user.id,
-          email: user.email,
-          name: user.name,
-        });
-
-        const publicToken = createToken({
           email: user.email,
           name: user.name,
         });
@@ -52,7 +71,7 @@ export default async function handler(
           "Set-Cookie",
           cookie.stringifySetCookie({
             name: "token",
-            value: secretToken,
+            value: token,
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
@@ -62,20 +81,22 @@ export default async function handler(
         );
 
         return res.status(200).json({
-          ok: true,
-          token: publicToken,
+          success: true,
+          message: "Login successful.",
         });
       }
 
       return res.status(401).json({
-        ok: false,
+        success: false,
         message: "Incorrect password.",
       });
     }
 
     res.status(400).json({
-      ok: false,
+      success: false,
       message: "Email not found.",
     });
   }
-}
+};
+
+export default handler;

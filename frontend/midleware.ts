@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 
 export function proxy(req: NextRequest) {
   const jwtSecretKey: string = process.env.JWT_SECRET_KEY!;
-  const token = req.cookies.get("token")?.value;
+  const token: string | undefined = req.cookies.get("token")?.value;
 
   const loginUrl = new URL("/login", req.url);
 
