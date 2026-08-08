@@ -28,13 +28,12 @@ const Index = ({ token }: { token: string }) => {
   };
 
   useEffect(() => {
-    getApiKey();
-    const token = localStorage.getItem("token_info");
-
-    if (token) {
-      const decoded: User = jwtDecode(token);
-      setUser(decoded);
-    }
+    // getApiKey();
+    // const token = localStorage.getItem("token_info");
+    // if (token) {
+    //   const decoded: User = jwtDecode(token);
+    //   setUser(decoded);
+    // }
   }, []);
   return (
     <Layout>

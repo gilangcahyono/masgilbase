@@ -36,7 +36,7 @@ const Index = () => {
     <div className="p-4">
       <Link
         href="/"
-        className=" grid h-12 w-32 place-content-center rounded-lg bg-gray-100 text-sm text-gray-500"
+        className=" grid h-12 w-32 place-content-center rounded-lg bg-gray-100 text-sm text-orange-500"
       >
         Masgilbase
       </Link>

@@ -6,7 +6,7 @@ const Sidebar = () => {
       <div className="p-4">
         <Link
           href="/dashboard"
-          className="grid h-12 w-32 place-content-center rounded-lg bg-gray-100 text-sm text-gray-500"
+          className="grid h-12 w-32 place-content-center rounded-lg bg-gray-100 text-sm text-orange-500"
         >
           Masgilbase
         </Link>
@@ -25,6 +25,14 @@ const Sidebar = () => {
               className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
             >
               Files
+            </Link>
+          </li>
+          <li>
+            <Link
+              href="/dashboard/auth"
+              className="block rounded-lg px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
+            >
+              Auth
             </Link>
           </li>
           <li>

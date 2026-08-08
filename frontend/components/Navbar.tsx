@@ -13,12 +13,11 @@ const Navbar = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token_info");
-
-    if (token) {
-      const decoded: User = jwtDecode(token);
-      setUser(decoded);
-    }
+    // const token = localStorage.getItem("token_info");
+    // if (token) {
+    //   const decoded: User = jwtDecode(token);
+    //   setUser(decoded);
+    // }
   }, []);
 
   const logout = async (e: any) => {
