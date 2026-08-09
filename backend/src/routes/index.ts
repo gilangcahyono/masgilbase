@@ -3,6 +3,6 @@ import auth from "./auth.route.ts";
 
 const router: Express = express();
 
-router.use("/", auth);
+router.use("/dashboard", auth);
 
 export default router;
