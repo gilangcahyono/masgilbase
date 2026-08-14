@@ -1,34 +1,31 @@
+"use client";
+
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { toast } from "sonner";
-import { LoginPayload, LoginResponse } from "../api/login";
+import { login } from "@/services/auth.service";
 
 const Index = () => {
   const router = useRouter();
-  const login = async (e: any) => {
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const payload: LoginPayload = {
-      email: e.currentTarget.email.value,
-      password: e.currentTarget.password.value,
-    };
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    });
-    const data: LoginResponse = await res.json();
-    if (!data.success) {
-      if (typeof data.message === "string") {
-        toast.error(data.message);
-      } else {
-        const errors = Object.values(data.message);
-        toast.error(errors[0][0]);
-      }
-    } else {
-      localStorage.setItem("token_info", data.token!);
+
+    try {
+      await login({
+        email: e.currentTarget.email.value,
+        password: e.currentTarget.password.value,
+      });
+
       router.push("/dashboard");
+    } catch (error: any) {
+      // console.log(error);
+      if (error?.errors) {
+        const errors = Object.values(error.errors) as string[][];
+        toast.error(errors[0][0]);
+      } else {
+        toast.error(error.message);
+      }
     }
   };
 
@@ -44,7 +41,7 @@ const Index = () => {
 
       <div className="h-fit flex items-center">
         <form
-          onSubmit={login}
+          onSubmit={handleSubmit}
           className="mx-auto w-sm space-y-4 rounded-lg border border-gray-300 bg-gray-100 p-6"
         >
           <h1 className="text-center text-3xl text-indigo-900 font-semibold">
@@ -62,8 +59,7 @@ const Index = () => {
             <input
               className="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:outline-none"
               id="email"
-              type="email"
-              required
+              type="text"
             />
           </div>
 
@@ -79,7 +75,6 @@ const Index = () => {
               className="mt-1 w-full rounded-lg border-gray-300 focus:border-indigo-500 focus:outline-none"
               id="password"
               type="password"
-              required
             />
           </div>
 

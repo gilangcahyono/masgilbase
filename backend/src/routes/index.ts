@@ -1,8 +1,11 @@
 import express, { type Express, type Request, type Response } from "express";
-import auth from "./auth.route.ts";
+import dashboard from "./dashboard.route.ts";
 
 const router: Express = express();
 
-router.use("/dashboard", auth);
+router.use("/dashboard/api", dashboard);
+
+// router.use("/api", auth);
+// router.use("/api", storage);
 
 export default router;
