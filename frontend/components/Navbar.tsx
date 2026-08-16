@@ -1,7 +1,5 @@
-import { jwtDecode } from "jwt-decode";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
 
 interface User {
   name: string;
@@ -9,22 +7,12 @@ interface User {
 }
 
 const Navbar = () => {
-  const [user, setUser] = useState<User | null>();
   const router = useRouter();
-
-  useEffect(() => {
-    // const token = localStorage.getItem("token_info");
-    // if (token) {
-    //   const decoded: User = jwtDecode(token);
-    //   setUser(decoded);
-    // }
-  }, []);
 
   const logout = async (e: any) => {
     await fetch("/api/logout", {
       method: "DELETE",
     });
-    localStorage.removeItem("token_info");
     router.push("/login");
   };
 
@@ -32,8 +20,8 @@ const Navbar = () => {
     <header className="bg-white border-b border-b-gray-200">
       <div className="mx-auto max-w-7xl px-6 xsm:px-6 xlg:px-8">
         <div className="flex h-16 items-center justify-between">
-          <div className="flex-1 md:flex md:items-center md:gap-12">
-            <a className="block text-indigo-600" href="#">
+          <div className="flex-1 md:flex md:items-center md:gap-12 ">
+            <button className="block text-indigo-600">
               <span className="sr-only">Home</span>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -49,32 +37,31 @@ const Navbar = () => {
                   d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5"
                 />
               </svg>
-            </a>
+            </button>
           </div>
 
           <div className="md:flex md:items-center md:gap-12">
             <div className="hidden md:relative md:block">
               <button
                 type="button"
-                className="overflow-hidden rounded-full border border-gray-300 shadow-inner"
+                className="overflow-hidden rounded-full border border-gray-400 shadow-inner flex"
               >
                 <span className="sr-only">Toggle dashboard menu</span>
 
                 <img
                   src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=1160"
-                  alt=""
                   className="size-10 object-cover"
                 />
               </button>
 
               <div
-                className="absolute inset-e-0 z-10 mt-0.5 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg xhidden"
+                className="absolute inset-e-0 z-10 mt-0.5 w-56 divide-y divide-gray-100 rounded-md border border-gray-100 bg-white shadow-lg hidden"
                 role="menu"
               >
                 <div className="p-2">
                   <div className="block rounded-lg px-4 py-2 text-gray-500 ">
-                    <span className="block font-semibold">{user?.name}</span>
-                    <span className="block text-xs">{user?.email}</span>
+                    <span className="block font-semibold">User Account</span>
+                    <span className="block text-xs">user@example.com</span>
                   </div>
                 </div>
                 <div className="p-2">

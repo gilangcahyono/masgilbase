@@ -3,4 +3,5 @@
 .agents/
 .claude/
 .windsurf/
+temp/
 masgilbase.db

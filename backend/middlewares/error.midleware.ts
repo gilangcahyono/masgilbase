@@ -6,10 +6,15 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  console.error(error);
+  // console.error(error.message);
+
+  const errorMessage =
+    process.env.NODE_ENV === "production"
+      ? "Internal Server Error"
+      : error.message;
 
   return res.status(500).json({
     success: false,
-    message: "Internal Server Error",
+    message: errorMessage,
   });
 };
