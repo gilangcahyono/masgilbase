@@ -3,5 +3,5 @@
 .agents/
 .claude/
 .windsurf/
-temp/
+/temp
 masgilbase.db
