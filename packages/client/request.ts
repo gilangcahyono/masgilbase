@@ -9,6 +9,7 @@ export const request = async (
   });
 
   const result = await res.json();
+  console.log(result);
 
   if (!res.ok) {
     return {

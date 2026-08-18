@@ -1,4 +1,5 @@
-import jwt from "jsonwebtoken";
+import jwt, { type JwtPayload } from "jsonwebtoken";
+import crypto from "crypto";
 
 const jwtSecretKey: string = process.env.JWT_SECRET_KEY!;
 
@@ -9,9 +10,9 @@ export const createToken = (payload: any) => {
 };
 
 export const verifyToken = (token: string) => {
-  try {
-    return jwt.verify(token, jwtSecretKey) as string;
-  } catch {
-    return null;
-  }
+  return jwt.verify(token, jwtSecretKey) as JwtPayload | null;
+};
+
+export const hashApiKey = (apiKey: string) => {
+  return crypto.createHash("sha256").update(apiKey).digest("hex");
 };

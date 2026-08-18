@@ -6,7 +6,7 @@ export const errorHandler = (
   res: Response,
   next: NextFunction,
 ) => {
-  // console.error(error.message);
+  console.error(error.message);
 
   const errorMessage =
     process.env.NODE_ENV === "production"

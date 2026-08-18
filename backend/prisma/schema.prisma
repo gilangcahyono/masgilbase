@@ -9,35 +9,47 @@ datasource db {
 
 model Account {
   id        String    @id @default(uuid())
+  name      String?
   email     String    @unique
   password  String
   createdAt DateTime  @default(now())
-  updatedAt DateTime
+  updatedAt DateTime  @updatedAt
   projects  Project[]
 }
 
 model Project {
   id        String   @id @default(uuid())
   name      String
+  desc      String?
   apiKey    String   @unique
+  apiSecret String   @unique
   createdAt DateTime @default(now())
-  updatedAt DateTime
+  updatedAt DateTime @updatedAt
   account   Account  @relation(fields: [accountId], references: [id])
   accountId String
+  files     File[]
+  users     User[]
 }
 
-// model File {
-//   id         String   @id @default(uuid())
-//   url        String
-//   uploadedAt DateTime @default(now())
-// }
+model File {
+  id           String   @id @default(uuid())
+  url          String
+  uploadedAt   DateTime @default(now())
+  originalname String
+  filename     String
+  mimetype     String
+  size         Int
+  project      Project? @relation(fields: [projectId], references: [id])
+  projectId    String?
+}
 
-// model User {
-//   id        String   @id @default(uuid())
-//   name      String
-//   email     String   @unique
-//   password  String
-//   apiKey    String   @unique
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime
-// }
+model User {
+  id        String   @id @default(uuid())
+  name      String?
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime
+  project   Project? @relation(fields: [projectId], references: [id])
+  projectId String?
+}

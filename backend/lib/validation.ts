@@ -24,3 +24,13 @@ export const registerSchema = z
     message: "Passwords do not match.",
     path: ["confirmPassword"],
   });
+
+export const projectSchema = z.object({
+  name: z.string().nonempty({
+    message: "Name is required.",
+  }),
+  desc: z.string(),
+  accountId: z.string().nonempty({
+    message: "Account ID is required.",
+  }),
+});

@@ -4,7 +4,7 @@ import { createStorage } from "./storage";
 
 export const createClient = (config: Config) => {
   return {
-    auth: createStorage(config),
-    storage: createAuth(config),
+    auth: createAuth(config),
+    storage: createStorage(config),
   };
 };

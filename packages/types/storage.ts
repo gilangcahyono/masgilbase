@@ -3,6 +3,5 @@ export interface File {
 }
 
 export interface Config {
-  url: string;
   apiKey: string;
 }

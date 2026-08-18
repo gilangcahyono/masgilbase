@@ -1,7 +1,8 @@
-export const upload = async (file: Express.Multer.File) => {
+export const store = async (file: Express.Multer.File) => {
   const host = "https://masgil.site/masgilbase";
 
   const data = {
+    originalname: file.originalname,
     filename: file.filename,
     mimetype: file.mimetype,
     size: file.size,
@@ -14,15 +15,14 @@ export const upload = async (file: Express.Multer.File) => {
     file: file,
     data: {
       id: 1,
-      url: "https://masgil.site/masgilbase/storage/files/image1.jpg",
-      uploadedAt: "2026-08-14T18:13:34.000Z",
-      data: data,
+      url: data.url,
+      uploadedAt: new Date().toISOString(),
     },
     statusCode: 201,
   };
 };
 
-export const remove = async (id: string) => {
+export const destroy = async (id: string) => {
   return {
     success: true,
     message: "File removed successfully",
@@ -30,7 +30,7 @@ export const remove = async (id: string) => {
   };
 };
 
-export const get = async (id: string) => {
+export const index = async (id: string) => {
   return {
     success: true,
     message: "File found successfully",

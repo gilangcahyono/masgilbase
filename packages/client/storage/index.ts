@@ -3,7 +3,7 @@ import { upload } from "./upload";
 
 export const createStorage = (config: Config) => {
   return {
-    upload(file: File) {
+    upload(file: any) {
       return upload(config, file);
     },
   };

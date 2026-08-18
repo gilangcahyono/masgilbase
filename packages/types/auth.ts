@@ -1,5 +1,5 @@
 export interface Config {
-  url: string;
+  projectId: string;
   apiKey: string;
 }
 
